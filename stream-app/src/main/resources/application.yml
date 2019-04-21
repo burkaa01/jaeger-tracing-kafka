@@ -1,0 +1,15 @@
+spring:
+  application.name: stream-app
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: stream-app
+
+jaeger.tracer:
+  host: localhost
+  port: 6831
+
+topics:
+  source-topic: number-topic
+  target-topic: even-topic
+  dead-letter-topic: odd-topic

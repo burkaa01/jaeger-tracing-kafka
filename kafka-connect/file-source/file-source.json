@@ -1,0 +1,10 @@
+{
+  "name": "numbers-file-source",
+  "config": {
+    "connector.class": "FileStreamSource",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "tasks.max": "1",
+    "file": "/usr/share/data/file-source/numbers.txt",
+    "topic": "number-topic"
+  }
+}

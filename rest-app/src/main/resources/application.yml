@@ -1,0 +1,7 @@
+spring.application.name: rest-app
+
+jaeger.tracer:
+  host: localhost
+  port: 6831
+
+server.port: 8096

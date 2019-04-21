@@ -1,0 +1,4 @@
+spring:
+  application.name: topic-configuration
+  kafka:
+    bootstrap-servers: localhost:9092

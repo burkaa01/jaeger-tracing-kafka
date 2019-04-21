@@ -1,0 +1,43 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.4.RELEASE'
+    }
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.github.burkaa01'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://packages.confluent.io/maven/"
+    }
+}
+
+dependencies {
+    // spring
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    // kafka
+    implementation "org.apache.kafka:kafka-clients:2.1.0"
+    implementation "org.apache.kafka:kafka-streams:2.1.0"
+
+    // jaeger
+    implementation 'io.jaegertracing:jaeger-client:0.33.1'
+    implementation 'io.opentracing.contrib:opentracing-kafka-client:0.0.16'
+    implementation 'io.opentracing.contrib:opentracing-kafka-streams:0.0.16'
+    implementation 'io.opentracing.contrib:opentracing-kafka-spring:0.0.16'
+}

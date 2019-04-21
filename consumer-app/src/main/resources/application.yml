@@ -1,0 +1,18 @@
+spring.application.name: consumer-app
+
+kafka:
+  bootstrap-servers: localhost:9092
+  consumer:
+    enable-auto-commit: false
+    auto-offset-reset: earliest
+    max-poll-records: 5
+    group-id: consumer-app
+    client-id: consumer-app
+
+jaeger.tracer:
+  host: localhost
+  port: 6831
+
+topics:
+  source-topic: sentence-topic
+  target-topic: answer-topic

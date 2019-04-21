@@ -1,0 +1,21 @@
+spring:
+  application.name: spring-consumer-app
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      group-id: spring-consumer-app
+      client-id: spring-consumer-app
+
+jaeger.tracer:
+  host: localhost
+  port: 6831
+
+topics:
+  source-topic: even-topic
+  target-topic: sentence-topic
+
+rest-app:
+  url: http://localhost:8096
+  api: /random
