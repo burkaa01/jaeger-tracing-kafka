@@ -1,6 +1,7 @@
 package com.github.burkaa01.stream.divider;
 
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.streams.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,32 +23,34 @@ public class DividerMapper {
         this.deadLetterTemplate = deadLetterTemplate;
     }
 
-    public KeyValue<String, Integer> map(String key, String value) {
-        if (value == null) {
+    public KeyValue<String, Integer> map(String key, ValueWithHeaders valueWithHeaders) {
+        if (valueWithHeaders == null) {
             return new KeyValue<>(null, null);
         }
 
         int number;
         try {
-            number = Integer.parseInt(value);
+            number = Integer.parseInt(valueWithHeaders.getValue());
         } catch (NumberFormatException e) {
             return new KeyValue<>(null, null);
         }
 
         if (isOddNumber(number)) {
-            toDeadLetterTopic(key, number);
+            toDeadLetterTopic(key, number, valueWithHeaders.getHeaders());
             return new KeyValue<>(null, null);
         }
         return new KeyValue<>(key, number);
     }
 
-    private void toDeadLetterTopic(String key, int value) {
+    private void toDeadLetterTopic(String key, int value, Headers headers) {
         LOGGER.info("{}: value={}", deadLetterTopic, value);
 
         ProducerRecord<String, Integer> deadLetterRecord = new ProducerRecord<>(
                 deadLetterTopic,
+                null,
                 key,
-                value);
+                value,
+                headers);
 
         deadLetterTemplate.send(deadLetterRecord);
     }

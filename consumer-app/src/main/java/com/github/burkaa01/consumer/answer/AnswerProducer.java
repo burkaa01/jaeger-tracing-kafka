@@ -7,6 +7,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.header.Headers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +48,7 @@ public class AnswerProducer {
             for (ConsumerRecord<String, String> record : records) {
                 String sentence = record.value();
                 LOGGER.info("{}: value={}", sentenceTopic, sentence);
-                produceAnswer(sentence);
+                produceAnswer(sentence, record.headers());
             }
 
             if (recordCount > 0) {
@@ -62,7 +63,7 @@ public class AnswerProducer {
         answerKafkaProducer.close();
     }
 
-    private void produceAnswer(String sentence) {
+    private void produceAnswer(String sentence, Headers headers) {
         int firstNumber;
         int secondNumber;
         String[] numbers = sentence.split(" \\+ ", 2);
@@ -84,7 +85,7 @@ public class AnswerProducer {
         json.addProperty("answer", answer);
         String jsonString = json.toString();
 
-        ProducerRecord<String, String> record = new ProducerRecord<>(answerTopic, null, jsonString);
+        ProducerRecord<String, String> record = new ProducerRecord<String, String>(answerTopic, null, null, jsonString, headers);
         LOGGER.info("{}: value={}", answerTopic, jsonString);
 
         answerKafkaProducer.send(record, (RecordMetadata recordMetadata, Exception exception) -> {

@@ -2,9 +2,12 @@ package com.github.burkaa01.rest.controller;
 
 import io.opentracing.Span;
 import io.opentracing.Tracer;
+import io.opentracing.contrib.spring.web.client.HttpHeadersCarrier;
+import io.opentracing.propagation.Format;
 import io.opentracing.util.GlobalTracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +31,8 @@ public class RandomRestController {
         Span span = tracer.activeSpan();
         span.setTag(RANDOM_NUMBER_TAG, randomNumber);
 
-        return new ResponseEntity<>(Integer.toString(randomNumber), HttpStatus.OK);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        tracer.inject(span.context(), Format.Builtin.HTTP_HEADERS, new HttpHeadersCarrier(responseHeaders));
+        return new ResponseEntity<>(Integer.toString(randomNumber), responseHeaders, HttpStatus.OK);
     }
 }
